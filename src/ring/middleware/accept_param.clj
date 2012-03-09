@@ -12,3 +12,13 @@
 		(not
 			(empty?
 				(re-seq (re-pattern pattern) value)))))
+
+(defn match-accept
+	"Returns matching entry from formats map given accept-header value."
+	{ :added "0.0.1" }
+	[accept-header]
+	(select-keys formats
+		(for [[format-keyword format-pattern]
+			  formats
+			  :when (accept-format? accept-header format-pattern)]
+			format-keyword)))
