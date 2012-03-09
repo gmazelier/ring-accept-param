@@ -2,6 +2,8 @@
 
 Ring middleware that augments `:params` according to the specified `Accept` request-header field. Helps to indicate which type is acceptable for the response, for example `text/html`, `text/xml` or `application/json`. When no format can be deduced, a default value is set (`text/html`).
 
+[![Build Status](https://secure.travis-ci.org/gmazelier/ring-accept-param.png)](https://secure.travis-ci.org/gmazelier/ring-accept-param.png)
+
 ## Usage
 
 Augments `:params` with an entry identified by the key `accept` and the detected value. You can now render the responce in your routes given the desired format, a la Grails.
