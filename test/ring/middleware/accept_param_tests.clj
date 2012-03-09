@@ -55,43 +55,43 @@
 	(mdw/wrap-accept-param identity))
 
 (deftest augments-with-accept-json
-	(let [req {:accept "application/json"
-			   :params {"id" "4f4ceffde4b0e75979becd25"}}
+	(let [req {:headers {"accept" "application/json"}
+			   :params  {"id" "4f4ceffde4b0e75979becd25"}}
 		  resp (echo-wrapper req)]
 		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
 
 (deftest augments-with-accept-json-and-level
-	(let [req {:accept "application/json;level=1"
+	(let [req {:headers {"accept" "application/json;level=1"}
 			   :params {"id" "4f4ceffde4b0e75979becd25"}}
 		  resp (echo-wrapper req)]
 		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
 
 (deftest augments-with-accept-json-and-quality
-	(let [req {:accept "application/json;q=0.8"
+	(let [req {:headers {"accept" "application/json;q=0.8"}
 			   :params {"id" "4f4ceffde4b0e75979becd25"}}
 		  resp (echo-wrapper req)]
 		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
 
 (deftest augments-with-accept-json-and-star
-	(let [req {:accept "application/json,*/*"
+	(let [req {:headers {"accept" "application/json,*/*"}
 			   :params {"id" "4f4ceffde4b0e75979becd25"}}
 		  resp (echo-wrapper req)]
 		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
 
 (deftest augments-with-accept-json-first
-	(let [req {:accept "application/json,text/xml,text/html"
+	(let [req {:headers {"accept" "application/json,text/xml,text/html"}
 			   :params {"id" "4f4ceffde4b0e75979becd25"}}
 		  resp (echo-wrapper req)]
 		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
 
 (deftest augments-with-accept-xml
-	(let [req {:accept "text/xml"
+	(let [req {:headers {"accept" "text/xml"}
 			   :params {"id" "4f4ceffde4b0e75979becd25"}}
 		  resp (echo-wrapper req)]
 		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "xml"} (:params resp)))))
 
 (deftest augments-with-accept-html
-	(let [req {:accept "text/html"
+	(let [req {:headers {"accept" "text/html"}
 			   :params {"id" "4f4ceffde4b0e75979becd25"}}
 		  resp (echo-wrapper req)]
 		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "html"} (:params resp)))))

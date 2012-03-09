@@ -48,7 +48,7 @@
 	{ :added "0.0.1" }
 	[handler]
 	(fn [req]
-		(let [#^String accept-header (:accept req)
-			  accept (detect-accept accept-header)
-			  req*   (assoc req :params (merge accept (:params req)))]
+		(let [#^String accept-header (get (:headers req) "accept")
+			           accept        (detect-accept accept-header)
+			           req*          (assoc req :params (merge accept (:params req)))]
 			(handler req*))))
