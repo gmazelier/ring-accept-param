@@ -2,6 +2,7 @@
 	(:use clojure.test)
 	(:require [ring.middleware.accept-param :as mdw]))
 
+; test accept-format?
 (deftest is-json
 	(is (mdw/accept-format? "application/json" "^application/json")))
 
@@ -14,6 +15,7 @@
 (deftest nil-is-not-json
 	(is (not (mdw/accept-format? nil "^application/json"))))
 
+; test match-accept
 (deftest match-nil
 	(is (= {} (mdw/match-accept nil))))
 
@@ -31,3 +33,19 @@
 
 (deftest match-xml-format
 	(is (= {:xml "^text/xml"} (mdw/match-accept "text/xml;q=0.8"))))
+
+; extract-first-format
+(deftest extract-from-nil
+	(is (= "html" (mdw/extract-first-format nil))))
+
+(deftest extract-from-emtpy-map
+	(is (= "html" (mdw/extract-first-format {}))))
+
+(deftest extract-from-one-entry-map
+	(is (= "xml" (mdw/extract-first-format {:xml "^text/xml"}))))
+
+(deftest extract-from-multiple-entries-map
+	(is (= "html" (mdw/extract-first-format {:html "^text/html" :json "^application/json" :xml "^text/xml"}))))
+
+(deftest extract-from-multiple-entries-map-inversed
+	(is (= "html" (mdw/extract-first-format {:xml "^text/xml" :json "^application/json" :html "^text/html"}))))

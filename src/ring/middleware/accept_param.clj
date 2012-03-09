@@ -1,5 +1,7 @@
 (ns ring.middleware.accept-param)
 
+(def default-format :html)
+
 (def formats {:json "^application/json"
 	          :html "^text/html"
 	          :xml "^text/xml"})
@@ -22,3 +24,15 @@
 			  formats
 			  :when (accept-format? accept-header format-pattern)]
 			format-keyword)))
+
+(defn extract-first-format
+	"Returns first keyword as accepted format if exists, default value otherwise.
+
+	At this point, accept-map should be empty or contain one entry. If accept-map cointains more
+	than one entry, keys are sorted by ascending value and the first one is returned."
+	{ :added "0.0.1" }
+	[accept-map]
+	(if (empty? accept-map)
+		(name default-format)
+		(when-first [first-format (keys (into (sorted-map) accept-map))]
+			(name first-format))))
