@@ -36,3 +36,19 @@
 		(name default-format)
 		(when-first [first-format (keys (into (sorted-map) accept-map))]
 			(name first-format))))
+
+(defn detect-accept
+	"Builds the  based on Accept request-header field analysis."
+	{ :added "0.0.1" }
+	[accept-header]
+	{"accept" (extract-first-format (match-accept accept-header))})
+
+(defn wrap-accept-param
+	"Augments :params according to the specified Accept request-header field."
+	{ :added "0.0.1" }
+	[handler]
+	(fn [req]
+		(let [#^String accept-header (:accept req)
+			  accept (detect-accept accept-header)
+			  req*   (assoc req :params (merge accept (:params req)))]
+			(handler req*))))

@@ -34,7 +34,7 @@
 (deftest match-xml-format
 	(is (= {:xml "^text/xml"} (mdw/match-accept "text/xml;q=0.8"))))
 
-; extract-first-format
+; test extract-first-format
 (deftest extract-from-nil
 	(is (= "html" (mdw/extract-first-format nil))))
 
@@ -49,3 +49,59 @@
 
 (deftest extract-from-multiple-entries-map-inversed
 	(is (= "html" (mdw/extract-first-format {:xml "^text/xml" :json "^application/json" :html "^text/html"}))))
+
+; test augments-with-accept-json
+(def echo-wrapper
+	(mdw/wrap-accept-param identity))
+
+(deftest augments-with-accept-json
+	(let [req {:accept "application/json"
+			   :params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
+
+(deftest augments-with-accept-json-and-level
+	(let [req {:accept "application/json;level=1"
+			   :params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
+
+(deftest augments-with-accept-json-and-quality
+	(let [req {:accept "application/json;q=0.8"
+			   :params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
+
+(deftest augments-with-accept-json-and-star
+	(let [req {:accept "application/json,*/*"
+			   :params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
+
+(deftest augments-with-accept-json-first
+	(let [req {:accept "application/json,text/xml,text/html"
+			   :params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "json"} (:params resp)))))
+
+(deftest augments-with-accept-xml
+	(let [req {:accept "text/xml"
+			   :params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "xml"} (:params resp)))))
+
+(deftest augments-with-accept-html
+	(let [req {:accept "text/html"
+			   :params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "html"} (:params resp)))))
+
+(deftest augments-with-accept-html-if-no-accept-request-header
+	(let [req {:params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "html"} (:params resp)))))
+
+(deftest augments-with-accept-html-if-unrecognized-accept-request-header
+	(let [req {:params {"id" "4f4ceffde4b0e75979becd25"}}
+		  resp (echo-wrapper req)]
+		(is (= {"id" "4f4ceffde4b0e75979becd25" "accept" "html"} (:params resp)))))
