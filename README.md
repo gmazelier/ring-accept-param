@@ -14,14 +14,14 @@ To be documented.
 
 With Leiningen:
 
-    [ring-accept-param "0.0.1-SNAPSHOT"]
+    [ring-accept-param "0.0.1"]
 
 With Maven:
 
     <dependency>
       <groupId>ring-accept-param</groupId>
       <artifactId>ring-accept-param</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.0.1</version>
     </dependency>
 
 ### Configuration
