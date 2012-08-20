@@ -38,10 +38,10 @@
 			(name first-format))))
 
 (defn detect-accept
-	"Builds the  based on Accept request-header field analysis."
+	"Builds the map based on Accept request-header field analysis."
 	{ :added "0.0.1" }
 	[accept-header]
-	{"accept" (extract-first-format (match-accept accept-header))})
+	{:accept (extract-first-format (match-accept accept-header))})
 
 (defn wrap-accept-param
 	"Augments :params according to the specified Accept request-header field."
