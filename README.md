@@ -8,8 +8,6 @@ Ring middleware that augments `:params` according to the specified `Accept` requ
 
 Augments `:params` with an entry identified by the key `:accept` and the detected value. You can now render the responce in your routes given the desired format, a la Grails.
 
-To be documented.
-
 ### Artifact
 
 With Leiningen:
