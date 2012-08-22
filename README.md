@@ -6,7 +6,7 @@ Ring middleware that augments `:params` according to the specified `Accept` requ
 
 ## Usage
 
-Augments `:params` with an entry identified by the key `accept` and the detected value. You can now render the responce in your routes given the desired format, a la Grails.
+Augments `:params` with an entry identified by the key `:accept` and the detected value. You can now render the responce in your routes given the desired format, a la Grails.
 
 To be documented.
 
@@ -26,19 +26,57 @@ With Maven:
 
 ### Configuration
 
-To configure the middleware:
+To configure and use this middleware:
 
 ```clojure
-(ns my.app
-  (:use [ring.middleware.accept-param :only [wrap-accept-param]])
-  (:require [compojure.handler :as handler]))
+(ns my-app.handler
+  (:use [compojure.core :only [defroutes GET]]
+        [ring.middleware.accept-param :only [wrap-accept-param]]
+        [cheshire.core :only [generate-string]])
+  (:require [compojure.handler :as handler]
+            [compojure.route :as route]))
 
-(defroutes main-routes
-  ...)
+(defn do-json-hello []
+  {:status 200
+   :headers {"Content-Type" "application/json; charset=utf-8"}
+   :body (generate-string {:response "Hello World"})})
+
+(defroutes app-routes
+  (GET "/" {params :params}
+    (do (println params)
+    (case (:accept params)
+      "json" (do-json-hello)
+      "html" "Hello World")))
+  (route/not-found "Not Found"))
 
 (def app
-  (-> (handler/api main-routes)
-      (wrap-accept-param)))
+  (-> app-routes
+    wrap-accept-param
+    (handler/site)))
+```
+
+You can test this with `curl`:
+```
+$ curl -i http://127.0.01:3000
+HTTP/1.1 200 OK
+Date: Wed, 22 Aug 2012 20:49:14 GMT
+Content-Type: text/html;charset=UTF-8
+Content-Length: 11
+Server: Jetty(7.6.1.v20120215)
+
+Hello World
+```
+
+And with a specified `Accept: application/json` header:
+```
+$ curl -i http://127.0.01:3000 -H "Accept: application/json"
+HTTP/1.1 200 OK
+Date: Wed, 22 Aug 2012 20:49:18 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 26
+Server: Jetty(7.6.1.v20120215)
+
+{"response":"Hello World"}
 ```
 
 ## See also
