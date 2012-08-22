@@ -77,6 +77,15 @@ Server: Jetty(7.6.1.v20120215)
 {"response":"Hello World"}
 ```
 
+## Roadmap
+
+Bunch of planned features:
+
++ Add more types like plain text or YAML.
++ Consider vendor-specific types in a non-strict mode.
++ Allow middleware configuration (default type, strict mode, etc.). 
++ Implement Accept request-header field [specs](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html).
+
 ## See also
 
 You can also try:
