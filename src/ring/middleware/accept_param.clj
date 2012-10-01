@@ -42,8 +42,11 @@
 (defn detect-accept
   "Builds the map based on Accept request-header field analysis."
   { :added "0.0.1" }
-  [accept-header]
-  {:accept (extract-first-format (match-accept accept-header))})
+  [accept-header accept-param]
+  (let [accept-map    (match-accept accept-header)
+        accept-header (extract-first-format accept-map)
+        accept        (if (nil? accept-param) accept-header accept-param)]
+    {:accept accept}))
 
 (defn wrap-accept-param
   "Augments :params according to the specified Accept request-header field."
@@ -51,6 +54,7 @@
   [handler]
   (fn [req]
     (let [#^String accept-header (get (:headers req) "accept")
-                   accept        (detect-accept accept-header)
+                   accept-param  (get (:params req) :format)
+                   accept        (detect-accept accept-header accept-param)
                    req*          (assoc req :params (merge accept (:params req)))]
       (handler req*))))

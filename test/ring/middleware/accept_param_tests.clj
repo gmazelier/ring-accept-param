@@ -62,52 +62,70 @@
 
 (deftest augments-with-accept-json
   (let [req {:headers {"accept" "application/json"}
-         :params  {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+             :params  {"id" "4f4ceffde4b0e75979becd25"}}
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "json"} (:params resp)))))
 
 (deftest augments-with-accept-json-and-level
   (let [req {:headers {"accept" "application/json;level=1"}
-         :params {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+             :params {"id" "4f4ceffde4b0e75979becd25"}}
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "json"} (:params resp)))))
 
 (deftest augments-with-accept-json-and-quality
   (let [req {:headers {"accept" "application/json;q=0.8"}
-         :params {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+             :params {"id" "4f4ceffde4b0e75979becd25"}}
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "json"} (:params resp)))))
 
 (deftest augments-with-accept-json-and-star
   (let [req {:headers {"accept" "application/json,*/*"}
-         :params {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+             :params {"id" "4f4ceffde4b0e75979becd25"}}
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "json"} (:params resp)))))
 
 (deftest augments-with-accept-json-first
   (let [req {:headers {"accept" "application/json,text/xml,text/html"}
-         :params {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+             :params {"id" "4f4ceffde4b0e75979becd25"}}
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "json"} (:params resp)))))
 
 (deftest augments-with-accept-xml
   (let [req {:headers {"accept" "text/xml"}
-         :params {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+             :params {"id" "4f4ceffde4b0e75979becd25"}}
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "xml"} (:params resp)))))
 
 (deftest augments-with-accept-html
   (let [req {:headers {"accept" "text/html"}
-         :params {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+             :params {"id" "4f4ceffde4b0e75979becd25"}}
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "html"} (:params resp)))))
 
-(deftest augments-with-accept-html-if-no-accept-request-header
+(deftest augments-with-accept-default-if-no-accept-request-header
   (let [req {:params {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "html"} (:params resp)))))
 
-(deftest augments-with-accept-html-if-unrecognized-accept-request-header
-  (let [req {:params {"id" "4f4ceffde4b0e75979becd25"}}
-      resp (echo-wrapper req)]
+(deftest augments-with-accept-default-if-unrecognized-accept-request-header
+  (let [req {:headers {"accept" "unkown/unkown,*/*"}
+             :params {"id" "4f4ceffde4b0e75979becd25"}}
+        resp (echo-wrapper req)]
     (is (= {"id" "4f4ceffde4b0e75979becd25" :accept "html"} (:params resp)))))
+
+(deftest augments-with-format-param-if-no-accept-request-header
+  (let [req {:params {"id" "4f4ceffde4b0e75979becd25" :format "csv"}}
+        resp (echo-wrapper req)]
+    (is (= {"id" "4f4ceffde4b0e75979becd25" :format "csv" :accept "csv"} (:params resp)))))
+
+(deftest augments-with-format-param-if-unrecognized-accept-request-header
+ (let [req {:headers {"accept" "unkown/unkown,*/*"}
+            :params {"id" "4f4ceffde4b0e75979becd25" :format "plain"}}
+       resp (echo-wrapper req)]
+    (is (= {"id" "4f4ceffde4b0e75979becd25" :format "plain" :accept "plain"} (:params resp)))))
+
+(deftest format-param-overrides-accept-header
+  (let [req {:headers {"accept" "application/json;level=1"}
+             :params {"id" "4f4ceffde4b0e75979becd25" :format "plain"}}
+        resp (echo-wrapper req)]
+    (is (= {"id" "4f4ceffde4b0e75979becd25" :format "plain" :accept "plain"} (:params resp)))))
