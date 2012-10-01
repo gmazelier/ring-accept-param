@@ -12,14 +12,14 @@ Augments `:params` with an entry identified by the key `:accept` and the detecte
 
 With Leiningen:
 
-    [ring-accept-param "0.1.0"]
+    [ring-accept-param "0.1.1"]
 
 With Maven:
 
     <dependency>
       <groupId>ring-accept-param</groupId>
       <artifactId>ring-accept-param</artifactId>
-      <version>0.1.0</version>
+      <version>0.1.1</version>
     </dependency>
 
 ### Configuration
